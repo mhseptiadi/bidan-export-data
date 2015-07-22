@@ -1,0 +1,106 @@
+kip to content
+This repository
+
+    Pull requests
+        Issues
+            Gist
+
+                @dimasciput
+
+                1,219
+                26,162
+
+                    9,585
+
+                    github/gitignore
+
+                    gitignore/Python.gitignore
+                    @gsnedders gsnedders on Apr 29 Add Jython compiled class files to the Python ignore file.
+
+                    33 contributors
+                    @arcresu
+                    @Metallicow
+                    @tzicatl
+                    @EvandroLG
+                    @Lucretiel
+                    @matheussl
+                    @jspahrsummers
+                    @rayshan
+                    @relekang
+                    @borntyping
+                    @sigo
+                    @llonchj
+                    @kdeldycke
+                    @reinout
+                    @honzajavorek
+                    @hugovk
+                    @gsnedders
+                    @xiaogaozi
+                    @adamv
+                    @skuschel
+                    @nvie
+                    @ecarreras
+                    @thedaniel
+                    @cjerdonek
+                    @Visgean
+                    @arjun024
+                    and others
+                    59 lines (49 sloc) 0.713 kB
+# Byte-compiled / optimized / DLL files
+                    __pycache__/
+                    *.py[cod]
+                    *$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
