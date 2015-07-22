@@ -1,0 +1,137 @@
+{% load staticfiles %}
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{% static 'bidan/images/favicon.ico' %}">
+
+    <title>Get Bidan Data</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'bidan/bootstrap.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'bidan/signin.css' %}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Javascript -->
+    <script src="{% static 'bidan/jquery.min.js' %}"></script>
+    <script src="{% static 'bidan/main.js' %}"></script>
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      {% if error_message %}
+      <div class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+       {{ error_message }}
+      </div>
+      {% endif %}
+
+      <form class="form-signin" id="signin" action="{% url 'bidan:get' %}" method="post">
+        {% csrf_token %}
+        <h2 class="form-signin-heading">Get form by</h2>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6">
+              {% for user in users1 %}
+                <div class="checkbox">
+
+                  <label>
+                    <input type="checkbox" name="users[]" value="{{user}}" > {{ user }}
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+            <div class="col-md-6">
+              {% for user in users2 %}
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" name="users[]" value="{{user}}" > {{ user }}
+                  </label>
+                </div>
+              {% endfor %}
+              <div class="checkbox">
+                  <label>
+                    <input type="checkbox" id="select_all" > Select all
+                  </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <label for="inputUsername" class="sr-only">Username</label>
+        <input type="text" id="inputUsername" name="username" class="form-control" placeholder="username (optional) ">
+        <label for="inputBatchSize" class="sr-only">Batch Size (optional) </label>
+        <input type="text" id="inputBatchSize" name="batch_size" class="form-control" placeholder="batch size (optional) ">
+        <br/>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" value="Get" id="button-get">
+          <span class="glyphicon glyphicon-log-in"></span>
+          Get
+        </button>
+      </form>
+
+      <div id="spinner" class="spinner" style="display:none;">
+        <img id="img-spinner" src="{% static 'bidan/images/giphy.gif' %}" alt="Loading"/>
+      </div>
+
+      <hr/>
+      
+      {% if xlsfiles %}
+        <p style="text-align:center;">
+        <a href="{% url 'bidan:download_all' xlsfiles %}" class="btn btn-success btn-download" role="button">
+        <span class="glyphicon glyphicon-download"></span>
+        Download all XLS</a>
+        </p>
+      {% endif %}
+
+      {% for file in xlsfile %}
+        <p style="text-align:center;">
+        <a href="{% url 'bidan:download' file.id %}" class="btn btn-success btn-download" role="button">
+        <span class="glyphicon glyphicon-download"></span>
+        Download {{file.response_username}} XLS</a>
+        </p>
+      {% endfor %}
+
+       <form class="form-signin" id="down_all" action="{% url 'bidan:get_all' %}" method="post">
+        {% csrf_token %}
+        <h2 class="form-signin-heading">Get all form</h2>
+        <label for="inputBatchSize" class="sr-only">Batch Size</label>
+        <input type="text" id="inputBatchSize" name="batch_size" class="form-control" placeholder="batch size" required>
+        </br>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" value="Get" id="button-get-2">
+          <span class="glyphicon glyphicon-log-in"></span>
+          Get
+        </button>
+      </form>
+
+      {% if allxlsfile %}
+      <hr/>
+      <p style="text-align:center;">
+        <a href="{% url 'bidan:download' allxlsfile.id %}" class="btn btn-success btn-download" role="button">
+        <span class="glyphicon glyphicon-download "></span>
+        Download {{allxlsfile.response_username}} XLS</a>
+      </p>
+      {% endif %}
+
+    </div> <!-- /container -->
+
+  </body>
+  <div class="footer navbar-fixed-bottom"> 
+    <p style="text-align:center;color:grey" > 
+      @dimasciputra
+    </p>
+  </div>
+</html>

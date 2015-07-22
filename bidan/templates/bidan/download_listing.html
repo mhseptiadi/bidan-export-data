@@ -1,0 +1,8 @@
+{% for file in xlsfile }
+  <hr/>
+  <p style="text-align:center;">
+    <a href="{% url 'bidan:download' file.id %}" class="btn btn-success btn-download" role="button">
+    <span class="glyphicon glyphicon-download"></span>
+    Download {{file.response_username}} XLS</a>
+  </p>
+{% endfor %}
