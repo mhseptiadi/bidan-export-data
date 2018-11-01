@@ -59,9 +59,9 @@ def get(request):
 	for user in listUser:
 		apiUrl = URL + "/form-submissions-by-loc?locationId="+user+"&timestamp=0"+batchSizeString
 		result = fetch(request,USERLOGIN, PASSWORDLOGIN, apiUrl, user)
-		if result["response"] is not None :
-			listResponse.append(result["response"])
-		elif result["response"] is not None :
+		if result["responses"] is not None :
+			listResponse.append(result["responses"])
+		elif result["err"] is not None :
 			return render(request, 'bidan/index.html', {'error_message' : result["err"], 'users1' : USERGROUP1, 'users2' : USERGROUP2 })
 
 
@@ -74,9 +74,9 @@ def get_all(request):
 	batchSize = "1000"
 	apiUrl = URL + "/all-form-submissions?timestamp=0&batch-size="+batchSize
 	result = fetch(request,USERLOGIN, PASSWORDLOGIN, apiUrl, "all")
-	if result["response"] is not None :
-		return HttpResponseRedirect(reverse('bidan:result_all', args=(responses[0].id,)))
-	elif result["response"] is not None :
+	if result["responses"] is not None :
+		return HttpResponseRedirect(reverse('bidan:result_all', args=(result["responses"][0].id,)))
+	elif result["err"] is not None :
 		return render(request, 'bidan/index.html', {'error_message' : result["err"], 'users1' : USERGROUP1, 'users2' : USERGROUP2 })
 
 def fetch(request, username, password, url, dataname):
