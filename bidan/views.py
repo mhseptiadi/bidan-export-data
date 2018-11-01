@@ -58,7 +58,12 @@ def get(request):
 
 	for user in listUser:
 		apiUrl = URL + "/form-submissions-by-loc?locationId="+user+"&timestamp=0"+batchSizeString
-		listResponse.append(fetch(request,USERLOGIN, PASSWORDLOGIN, apiUrl, user))
+		result = fetch(request,USERLOGIN, PASSWORDLOGIN, apiUrl, user)
+		if result["response"] is not None :
+			listResponse.append(result["response"])
+		elif result["response"] is not None :
+			return render(request, 'bidan/index.html', {'error_message' : result["err"], 'users1' : USERGROUP1, 'users2' : USERGROUP2 })
+
 
 	for obj in listResponse :
 		arguments+=str(obj[0].id) + "/"
@@ -68,8 +73,11 @@ def get(request):
 def get_all(request):
 	batchSize = "1000"
 	apiUrl = URL + "/all-form-submissions?timestamp=0&batch-size="+batchSize
-	responses = fetch(request,USERLOGIN, PASSWORDLOGIN, apiUrl, "all")
-	return HttpResponseRedirect(reverse('bidan:result_all', args=(responses[0].id,)))
+	result = fetch(request,USERLOGIN, PASSWORDLOGIN, apiUrl, "all")
+	if result["response"] is not None :
+		return HttpResponseRedirect(reverse('bidan:result_all', args=(responses[0].id,)))
+	elif result["response"] is not None :
+		return render(request, 'bidan/index.html', {'error_message' : result["err"], 'users1' : USERGROUP1, 'users2' : USERGROUP2 })
 
 def fetch(request, username, password, url, dataname):
 	try:
@@ -80,11 +88,18 @@ def fetch(request, username, password, url, dataname):
 		result_json = json.load(result.fp)
 		result.close()
 		responses = Response.objects.update_or_create(response_username=dataname,defaults=dict(response_text=json.dumps(result_json),response_password=password))
-		return responses
+		result = {}
+		result["responses"] = responses
+		result["err"] = None
+		return result
 	except (socket.timeout, urllib2.HTTPError) as e:
 		# return HttpResponse("Error: %s" % e)
 		# Redisplay the question voting form.
-		return render(request, 'bidan/index.html', {'error_message' : e, 'users1' : USERGROUP1, 'users2' : USERGROUP2 })
+		# return render(request, 'bidan/index.html', {'error_message' : e, 'users1' : USERGROUP1, 'users2' : USERGROUP2 })
+		result = {}
+		result["responses"] = None
+		result["err"] = e
+		return result
 
 def result(request, response_id):
 	pieces = response_id.split('/')
