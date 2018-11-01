@@ -272,3 +272,11 @@ def xls_to_response(xls, fname):
     xls.save(response)
     return response
 
+def download_raw(request, response_id):
+	xlsfile = get_object_or_404(Response, pk=response_id)
+	jsonData = json.loads(xlsfile.response_text)
+	return HttpResponse(json.dumps(jsonData), content_type="application/json")    
+	# response = HttpResponse(content_type="application/json")
+    # response['Content-Disposition'] = 'attachment; filename=%s' % response_id
+    # xls.save(response)
+    # return response
