@@ -40,7 +40,8 @@ def index(request):
 
 def get(request):
 	username = request.POST["username"]
-	batchSize = request.POST["batch_size"]
+	# batchSize = request.POST["batch_size"]
+	batchSize = "500"
 	batchSizeString = ""
 	arguments = ""
 
@@ -71,7 +72,7 @@ def get(request):
 	return HttpResponseRedirect(reverse('bidan:result', args=(arguments,)))
 
 def get_all(request):
-	batchSize = "1000"
+	batchSize = "500"
 	apiUrl = URL + "/all-form-submissions?timestamp=0&batch-size="+batchSize
 	result = fetch(request,USERLOGIN, PASSWORDLOGIN, apiUrl, "all")
 	if result["responses"] is not None :
