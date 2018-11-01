@@ -17,12 +17,12 @@ from .models import Response
 timeout = 10000
 socket.setdefaulttimeout(timeout)
 
-URL = "http://118.91.130.18:9979"
-USERLOGIN = "demo1"
-PASSWORDLOGIN = "1"
+URL = "http://13.229.79.91:9080/opensrp/"
+USERLOGIN = "antaravato1"
+PASSWORDLOGIN = "Mahery123"
 
-USERGROUP1 = ['user1', 'user2', 'user3', 'user4', 'user5', 'user6', 'user8']
-USERGROUP2 = ['user9', 'user10', 'user11', 'user12', 'user13', 'user14']
+USERGROUP1 = ['Antaravato', 'Maintambato']
+USERGROUP2 = ['Vinanibe','Marofototra']
 
 # set xls style
 style0 = xlwt.easyxf('font: name Times New Roman, color-index red, bold on; borders: top medium, bottom medium, left medium, right medium;',
@@ -54,11 +54,11 @@ def get(request):
 		listUser.append(username)
 
 	if not listUser :
-		return render(request, 'bidan/index.html', {'error_message' : "No user selected", 'users1' : USERGROUP1, 'users2' : USERGROUP2 })
+		return render(request, 'bidan/index.html', {'error_message' : "No location selected", 'users1' : USERGROUP1, 'users2' : USERGROUP2 })
 
 	for user in listUser:
-		apiUrl = URL + "/form-submissions?anm-id="+user+"&timestamp=0"+batchSizeString
-		listResponse.append(fetch(USERLOGIN, PASSWORDLOGIN, apiUrl, user))
+		apiUrl = URL + "/form-submissions-by-loc?locationId="+user+"&timestamp=0"+batchSizeString
+		listResponse.append(fetch(request,USERLOGIN, PASSWORDLOGIN, apiUrl, user))
 
 	for obj in listResponse :
 		arguments+=str(obj[0].id) + "/"
@@ -66,12 +66,12 @@ def get(request):
 	return HttpResponseRedirect(reverse('bidan:result', args=(arguments,)))
 
 def get_all(request):
-	batchSize = request.POST["batch_size"]
+	batchSize = "1000"
 	apiUrl = URL + "/all-form-submissions?timestamp=0&batch-size="+batchSize
-	responses = fetch(USERLOGIN, PASSWORDLOGIN, apiUrl, "all")
+	responses = fetch(request,USERLOGIN, PASSWORDLOGIN, apiUrl, "all")
 	return HttpResponseRedirect(reverse('bidan:result_all', args=(responses[0].id,)))
 
-def fetch(username, password, url, dataname):
+def fetch(request, username, password, url, dataname):
 	try:
 		req = urllib2.Request(url)
 		base64String = base64.encodestring('%s:%s' % (username, password)).replace('\n', '')
@@ -106,6 +106,11 @@ def result_all(request, response_id):
 
 def download_all(request, responses_id):
 	formNames = {}
+	instanceIds = []
+	hhHeads = {}
+	memberHHIds = {}
+	memberName = {}
+
 	userid = responses_id.split("/")
 	xlsfile = []
 
@@ -114,11 +119,32 @@ def download_all(request, responses_id):
 		xlsfile.append(_object)
 		result_json = json.loads(_object.response_text)
 		for row in result_json:
+			if not row["instanceId"] in instanceIds:
+				instanceIds.append(row["instanceId"])
+			else:
+				continue
 			if not row["formName"] in formNames:
 				formNames[row["formName"]] = []
 			jsondata = (json.loads(row["formInstance"]))
 			jsonfield = []
 			jsonfield.append({'name' : "User ID", 'value' : row["anmId"]})
+
+			if row["formName"] == "HHRegistration":
+				hhHeads[row["entityId"]] = jsondata["form"]["mapOfFieldsByName"]["name_household_head"]
+			if row["formName"] == "open_census":
+				memberName[jsondata["form"]["mapOfFieldsByName"]["memberId"]] = jsondata["form"]["mapOfFieldsByName"]["Name_family_member"]
+				memberHHIds[jsondata["form"]["mapOfFieldsByName"]["memberId"]] = jsondata["form"]["mapOfFieldsByName"]["id"]
+				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["memberId"]]]})
+			if row["formName"] == "open_census_edit":
+				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["id"]]]})
+			if row["formName"] == "follow_up" or row["formName"] == "child_health" or row["formName"] == "dietary_intake":
+				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"]]]})
+				jsonfield.append({'name' : "HH Member Name", 'value' : memberName[row["entityId"]]})
+			if row["formName"] == "follow_up_edit" or row["formName"] == "child_health_edit" or row["formName"] == "dietary_intake_edit":
+                                jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"]]]})
+                                jsonfield.append({'name' : "HH Member Name", 'value' : memberName[row["entityId"]]})
+
+
 			jsonfield.extend(jsondata["form"]["fields"])
 			jsonfield.append({'name' : "clientVersionSubmissionDate", 'value' : datetime.fromtimestamp(int(row["clientVersion"])/1000.0).strftime('%Y-%m-%d %H:%M:%S')})
 			jsonfield.append({'name' : "serverVersionSubmissionDate", 'value' : datetime.fromtimestamp(int(row["serverVersion"])/1000.0).strftime('%Y-%m-%d %H:%M:%S')})
@@ -134,16 +160,47 @@ def download_all(request, responses_id):
 
 def download(request, response_id):
 	formNames = {}
+	instanceIds = []
+	hhHeads = {}
+	memberHHIds = {}
+	memberName = {}
 	wb = xlwt.Workbook()
 	xlsfile = get_object_or_404(Response, pk=response_id)
 	jsonData = json.loads(xlsfile.response_text)
 
 	for row in jsonData:
+		if not row["instanceId"] in instanceIds:
+			instanceIds.append(row["instanceId"])
+		else:
+			continue
 		if not row["formName"] in formNames:
 			formNames[row["formName"]] = []
+
 		jsondata = (json.loads(row["formInstance"]))
 		jsonfield = []
 		jsonfield.append({'name' : "User ID", 'value' : row["anmId"]})
+
+		if row["formName"] == "HHRegistration":
+			hhHeads[row["entityId"]] = jsondata["form"]["mapOfFieldsByName"]["name_household_head"]
+		if row["formName"] == "open_census":
+			memberName[jsondata["form"]["mapOfFieldsByName"]["memberId"]] = jsondata["form"]["mapOfFieldsByName"]["Name_family_member"]
+			memberHHIds[jsondata["form"]["mapOfFieldsByName"]["memberId"]] = jsondata["form"]["mapOfFieldsByName"]["id"]
+			jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["memberId"]]]})
+		if row["formName"] == "open_census_edit":
+                        jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["id"]]]})
+		if row["formName"] == "follow_up" or row["formName"] == "child_health" or row["formName"] == "dietary_intake":
+			jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"]]]})
+			jsonfield.append({'name' : "HH Member Name", 'value' : memberName[row["entityId"]]})
+		if row["formName"] == "follow_up_edit" or row["formName"] == "child_health_edit" or row["formName"] == "dietary_intake_edit":
+			if row["entityId"] in memberHHIds:
+                        	jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"]]]})
+			else:
+				jsonfield.append({'name' : "HH Head Name", 'value' : 'not found:'+row["entityId"]})
+			if row["entityId"] in memberName:
+                        	jsonfield.append({'name' : "HH Member Name", 'value' : memberName[row["entityId"]]})
+			else:
+				jsonfield.append({'name' : "HH Member Name", 'value' : 'not found:'+row["entityId"]})
+
 		jsonfield.extend(jsondata["form"]["fields"])
 		jsonfield.append({'name' : "clientVersionSubmissionDate", 'value' : datetime.fromtimestamp(int(row["clientVersion"])/1000.0).strftime('%Y-%m-%d %H:%M:%S')})
 		jsonfield.append({'name' : "serverVersionSubmissionDate", 'value' : datetime.fromtimestamp(int(row["serverVersion"])/1000.0).strftime('%Y-%m-%d %H:%M:%S')})
@@ -154,37 +211,43 @@ def download(request, response_id):
 def make_xls(formNames):
 	wb = xlwt.Workbook()
 
-	for sheet in formNames:
-		# create worksheet
-		worksheetTitle = sheet[0:30]
-		wa = wb.add_sheet(inflection.humanize(worksheetTitle))
-		num_width = 0
-		titleArray = []
-		formData = []
+	if formNames:
+		for sheet in formNames:
+			# create worksheet
+			worksheetTitle = sheet[0:30]
+			wa = wb.add_sheet(inflection.humanize(worksheetTitle))
+			num_width = 0
+			titleArray = []
+			formData = []
 		
-		# put the json data to array
-		for idx1, data1 in enumerate(formNames[sheet]):
-			formData.append([])
-			formData[idx1] = {}
-			for idx2, data2 in enumerate(data1):
-				if not data2['name'] in titleArray:
-					titleArray.insert(idx2, data2['name'])
-				value = data2.get('value')
-				if value is None:
-					value = '-'
-				formData[idx1][data2['name']] = value
+			# put the json data to array
+			for idx1, data1 in enumerate(formNames[sheet]):
+				formData.append([])
+				formData[idx1] = {}
+				for idx2, data2 in enumerate(data1):
+					if not data2['name'] in titleArray:
+						titleArray.insert(idx2, data2['name'])
+					value = data2.get('value')
+					if value is None:
+						value = '-'
+					formData[idx1][data2['name']] = value
 
-		# write al data to worksheet
-		for idx1, data1 in enumerate(formData):
-			for idx2, data2 in enumerate(titleArray):
-				if idx1 == 0:
-					wa.write(0, idx2, inflection.titleize(data2), style0)
-				if data2 in data1:
-					value = data1[data2]
-					wa.col(idx2).width = get_width(len(value)) if get_width(len(value)) > wa.col(idx2).width else wa.col(idx2).width
-					wa.write(idx1+1, idx2, inflection.humanize(value), style1)
-				else:
-					wa.write(idx1+1, idx2, '-', style1)
+			# write al data to worksheet
+			for idx1, data1 in enumerate(formData):
+				for idx2, data2 in enumerate(titleArray):
+					if idx1 == 0:
+						wa.write(0, idx2, inflection.titleize(data2), style0)
+					if data2 in data1:
+						value = data1[data2]
+						col_width = get_width(len(value))
+						if col_width > 65535:
+							col_width = 65535
+						wa.col(idx2).width = col_width  # if get_width(len(value)) > wa.col(idx2).width else wa.col(idx2).width
+						wa.write(idx1+1, idx2, inflection.humanize(value), style1)
+					else:
+						wa.write(idx1+1, idx2, '-', style1)
+	else :
+		wa = wb.add_sheet(inflection.humanize('sheet1'))
 
 	return wb
 

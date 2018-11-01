@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <link rel="icon" href="{% static 'bidan/images/favicon.ico' %}">
 
-    <title>Get Bidan Data</title>
+    <title>Get OpenSRP Data</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'bidan/bootstrap.css' %}" rel="stylesheet">
@@ -43,7 +43,7 @@
 
       <form class="form-signin" id="signin" action="{% url 'bidan:get' %}" method="post">
         {% csrf_token %}
-        <h2 class="form-signin-heading">Get form by</h2>
+        <h2 class="form-signin-heading">Please choose the location(s)</h2>
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-6">
@@ -72,10 +72,10 @@
             </div>
           </div>
         </div>
-        <label for="inputUsername" class="sr-only">Username</label>
-        <input type="text" id="inputUsername" name="username" class="form-control" placeholder="username (optional) ">
-        <label for="inputBatchSize" class="sr-only">Batch Size (optional) </label>
-        <input type="text" id="inputBatchSize" name="batch_size" class="form-control" placeholder="batch size (optional) ">
+        <!-- <label for="inputUsername" class="sr-only">Username</label> -->
+        <input type="hidden" id="inputUsername" name="username" class="form-control" placeholder="username (optional) ">
+        <!-- <label for="inputBatchSize" class="sr-only">Batch Size (optional) </label> -->
+        <input type="hidden" id="inputBatchSize" name="batch_size" class="form-control" placeholder="batch size (optional) ">
         <br/>
         <button class="btn btn-lg btn-primary btn-block" type="submit" value="Get" id="button-get">
           <span class="glyphicon glyphicon-log-in"></span>
@@ -105,7 +105,8 @@
         </p>
       {% endfor %}
 
-       <form class="form-signin" id="down_all" action="{% url 'bidan:get_all' %}" method="post">
+      <!--
+      <form class="form-signin" id="down_all" action="{% url 'bidan:get_all' %}" method="post">
         {% csrf_token %}
         <h2 class="form-signin-heading">Get all form</h2>
         <label for="inputBatchSize" class="sr-only">Batch Size</label>
@@ -116,6 +117,7 @@
           Get
         </button>
       </form>
+      -->
 
       {% if allxlsfile %}
       <hr/>
@@ -131,7 +133,7 @@
   </body>
   <div class="footer navbar-fixed-bottom"> 
     <p style="text-align:center;color:grey" > 
-      @dimasciputra
+      SUMMIT INSTITUTE OF DEVELOPMENT
     </p>
   </div>
 </html>
