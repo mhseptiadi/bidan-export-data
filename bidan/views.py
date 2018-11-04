@@ -51,9 +51,9 @@ def get(request):
 		dateAfter = lastMonth.strftime("%d/%m/%Y")
 
 
-	timestamp = time.mktime(datetime.strptime(dateAfter, "%d/%m/%Y").timetuple()) * 1000
+	timestamp = time.mktime(datetime.strptime(dateAfter, "%d/%m/%Y").timetuple())
 
-	return HttpResponse("{\"test\":"+dateAfter+" | "+str(timestamp)+"}", content_type="application/json")
+	return HttpResponse("{\"test\":"+dateAfter+" | "+str(int(timestamp))+"000}", content_type="application/json")
 
 	# batchSize = "500"
 	batchSizeString = ""
