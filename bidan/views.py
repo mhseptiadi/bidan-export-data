@@ -312,6 +312,7 @@ def make_xls(formNames):
 				for idx2, data2 in enumerate(titleArray):
 					if idx1 == 0:
 						it = inflection.titleize(data2)
+						print(it)
 						wa.write(0, idx2, it, style0)
 					if data2 in data1:
 						value = data1[data2]
