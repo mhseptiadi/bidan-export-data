@@ -310,19 +310,17 @@ def make_xls(formNames):
 			# write al data to worksheet
 			for idx1, data1 in enumerate(formData):
 				for idx2, data2 in enumerate(titleArray):
-					if idx1 == 0:
-						if idx2 < 256:
+					if idx2 < 256:
+						if idx1 == 0:
 							wa.write(0, idx2, inflection.titleize(data2), style0)
-					if data2 in data1:
-						value = data1[data2]
-						col_width = get_width(len(value))
-						if col_width > 65535:
-							col_width = 65535
-						wa.col(idx2).width = col_width  # if get_width(len(value)) > wa.col(idx2).width else wa.col(idx2).width
-						if idx2 < 256:
+						if data2 in data1:
+							value = data1[data2]
+							col_width = get_width(len(value))
+							if col_width > 65535:
+								col_width = 65535
+							wa.col(idx2).width = col_width  # if get_width(len(value)) > wa.col(idx2).width else wa.col(idx2).width
 							wa.write(idx1+1, idx2, inflection.humanize(value), style1)
-					else:
-						if idx2 < 256:
+						else:
 							wa.write(idx1+1, idx2, '-', style1)
 	else :
 		wa = wb.add_sheet(inflection.humanize('sheet1'))
