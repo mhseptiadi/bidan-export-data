@@ -51,7 +51,7 @@ def get(request):
 		dateAfter = lastMonth.strftime("%d/%m/%Y")
 
 
-	timestamp = time.mktime(datetime.datetime.strptime(dateAfter, "%d/%m/%Y").timetuple())
+	timestamp = time.mktime(datetime.strptime(dateAfter, "%d/%m/%Y").timetuple())
 
 	return HttpResponse("{\"test\":"+dateAfter+" | "+timestamp+"}", content_type="application/json")
 
