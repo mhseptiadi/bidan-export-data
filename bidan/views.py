@@ -41,6 +41,17 @@ def index(request):
 def get(request):
 	username = request.POST["username"]
 	batchSize = request.POST["batch_size"]
+	date = request.POST["date"]
+	if date == "" : 
+		today = datetime.date.today()
+		first = today.replace(day=1)
+		lastMonth = first - datetime.timedelta(days=1)
+		date = lastMonth.strftime("%d/%m/%Y")
+
+	timestamp = time.mktime(datetime.datetime.strptime(date, "%d/%m/%Y").timetuple())
+
+	return HttpResponse("{\"test\":"+timestamp+"}", content_type="application/json")
+
 	# batchSize = "500"
 	batchSizeString = ""
 	arguments = ""
