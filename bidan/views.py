@@ -48,7 +48,7 @@ def get(request):
 		today = date.today()
 		first = today.replace(day=1)
 		lastMonth = first - timedelta(days=1)
-		dateAfter = lastMonth.strftime("%d/%m/%Y")
+		dateAfter = "01/"+lastMonth.strftime("%m/%Y")
 
 
 	timestamp = time.mktime(datetime.strptime(dateAfter, "%d/%m/%Y").timetuple())
