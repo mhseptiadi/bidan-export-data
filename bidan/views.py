@@ -168,7 +168,8 @@ def download_all(request, responses_id):
 			if row["formName"] == "open_census_edit":
 				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["id"]]]})
 			if row["formName"] == "follow_up" or row["formName"] == "child_health" or row["formName"] == "dietary_intake":
-				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"]]]})
+				# jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"]]]})
+				jsonfield.append({'name' : "HH Head Name", 'value' : json.dumps(jsonData)})
 				jsonfield.append({'name' : "HH Member Name", 'value' : memberName[row["entityId"]]})
 			if row["formName"] == "follow_up_edit" or row["formName"] == "child_health_edit" or row["formName"] == "dietary_intake_edit":
                                 jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"]]]})
