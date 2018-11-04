@@ -53,7 +53,7 @@ def get(request):
 
 	timestamp = time.mktime(datetime.strptime(dateAfter, "%d/%m/%Y").timetuple())
 
-	return HttpResponse("{\"test\":"+dateAfter+" | "+timestamp+"}", content_type="application/json")
+	return HttpResponse("{\"test\":"+dateAfter+" | "+str(timestamp)+"}", content_type="application/json")
 
 	# batchSize = "500"
 	batchSizeString = ""
