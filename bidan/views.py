@@ -44,13 +44,10 @@ def get(request):
 	batchSize = request.POST["batch_size"]
 	dateAfter = request.POST["dateAfter"]
 	if dateAfter == "" : 
-		# today = datetime.date.today()
 		today = date.today()
 		first = today.replace(day=1)
-		lastMonth = first - datetime.timedelta(days=1)
+		lastMonth = first - timedelta(days=1)
 		dateAfter = lastMonth.strftime("%d/%m/%Y")
-		# now = datetime.datetime.now()
-		# lastMonth = now + dateutil.relativedelta.relativedelta(months=-1)
 
 
 	timestamp = time.mktime(datetime.datetime.strptime(dateAfter, "%d/%m/%Y").timetuple())
