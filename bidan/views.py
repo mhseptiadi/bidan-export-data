@@ -311,6 +311,10 @@ def make_xls(formNames):
 			for idx1, data1 in enumerate(formData):
 				for idx2, data2 in enumerate(titleArray):
 					if idx1 == 0:
+						col_width = get_width(len(data2))
+						if col_width > 65535:
+							col_width = 65535
+						wa.col(idx2).width = col_width 
 						wa.write(0, idx2, inflection.titleize(data2), style0)
 					if data2 in data1:
 						value = data1[data2]
