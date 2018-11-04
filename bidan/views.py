@@ -179,9 +179,14 @@ def download_all(request, responses_id):
 			if row["formName"] == "HHRegistration":
 				hhHeads[row["entityId"]] = jsondata["form"]["mapOfFieldsByName"]["name_household_head"]
 			if row["formName"] == "open_census":
-				memberName[jsondata["form"]["mapOfFieldsByName"]["memberId"]] = jsondata["form"]["mapOfFieldsByName"]["Name_family_member"]
-				memberHHIds[jsondata["form"]["mapOfFieldsByName"]["memberId"]] = jsondata["form"]["mapOfFieldsByName"]["id"]
-				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["memberId"]]]})
+				if itHas(jsondata,"form-mapOfFieldsByName-memberId") is not None and itHas(jsondata,"form-mapOfFieldsByName-Name_family_member") is not None:
+					memberName[jsondata["form"]["mapOfFieldsByName"]["memberId"]] = jsondata["form"]["mapOfFieldsByName"]["Name_family_member"]
+				if itHas(jsondata,"form-mapOfFieldsByName-memberId") is not None and itHas(jsondata,"form-mapOfFieldsByName-id") is not None:
+					memberHHIds[jsondata["form"]["mapOfFieldsByName"]["memberId"]] = jsondata["form"]["mapOfFieldsByName"]["id"]
+				if itHas(memberHHIds,itHas(jsondata,"form-mapOfFieldsByName-memberId")) is not None:
+					jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["memberId"]]]})
+				else:
+					jsonfield.append({'name' : "HH Head Name", 'value' : "not found"})
 			if row["formName"] == "open_census_edit":
 				if itHas(memberHHIds,itHas(jsondata,"form-mapOfFieldsByName-id")) is not None:
 					jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["id"]]]})
@@ -247,9 +252,14 @@ def download(request, response_id):
 		if row["formName"] == "HHRegistration":
 			hhHeads[row["entityId"]] = jsondata["form"]["mapOfFieldsByName"]["name_household_head"]
 		if row["formName"] == "open_census":
-			memberName[jsondata["form"]["mapOfFieldsByName"]["memberId"]] = jsondata["form"]["mapOfFieldsByName"]["Name_family_member"]
-			memberHHIds[jsondata["form"]["mapOfFieldsByName"]["memberId"]] = jsondata["form"]["mapOfFieldsByName"]["id"]
-			jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["memberId"]]]})
+			if itHas(jsondata,"form-mapOfFieldsByName-memberId") is not None and itHas(jsondata,"form-mapOfFieldsByName-Name_family_member") is not None:
+				memberName[jsondata["form"]["mapOfFieldsByName"]["memberId"]] = jsondata["form"]["mapOfFieldsByName"]["Name_family_member"]
+			if itHas(jsondata,"form-mapOfFieldsByName-memberId") is not None and itHas(jsondata,"form-mapOfFieldsByName-id") is not None:
+				memberHHIds[jsondata["form"]["mapOfFieldsByName"]["memberId"]] = jsondata["form"]["mapOfFieldsByName"]["id"]
+			if itHas(memberHHIds,itHas(jsondata,"form-mapOfFieldsByName-memberId")) is not None:
+				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["memberId"]]]})
+			else:
+				jsonfield.append({'name' : "HH Head Name", 'value' : "not found"})
 		if row["formName"] == "open_census_edit":
 			if itHas(memberHHIds,itHas(jsondata,"form-mapOfFieldsByName-id")) is not None:
 				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["id"]]]})
