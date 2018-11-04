@@ -9,7 +9,7 @@ import xlwt
 import json
 import inflection
 import sys
-from datetime import datetime 
+from datetime import datetime,date,timedelta 
 from .models import Response
 
 # set timeout
@@ -47,6 +47,9 @@ def get(request):
 		first = today.replace(day=1)
 		lastMonth = first - datetime.timedelta(days=1)
 		date = lastMonth.strftime("%d/%m/%Y")
+		# now = datetime.datetime.now()
+		# lastMonth = now + dateutil.relativedelta.relativedelta(months=-1)
+
 
 	timestamp = time.mktime(datetime.datetime.strptime(date, "%d/%m/%Y").timetuple())
 
