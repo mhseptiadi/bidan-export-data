@@ -205,7 +205,7 @@ def download_all(request, responses_id):
 					jsonfield.append({'name' : "HH Head Name", 'value' : ""})
 				if itHas(memberName,r_entityId) is not None:
 					jsonfield.append({'name' : "HH Member Name", 'value' : memberName[r_entityId]})
-				else
+				else:
 					jsonfield.append({'name' : "HH Member Name", 'value' : ""})
 
 
@@ -263,7 +263,7 @@ def download(request, response_id):
 				jsonfield.append({'name' : "HH Head Name", 'value' : ""})
 			if itHas(memberName,r_entityId) is not None:
 				jsonfield.append({'name' : "HH Member Name", 'value' : memberName[r_entityId]})
-			else
+			else:
 				jsonfield.append({'name' : "HH Member Name", 'value' : ""})
 		if row["formName"] == "follow_up_edit" or row["formName"] == "child_health_edit" or row["formName"] == "dietary_intake_edit":
 			r_entityId = row["entityId"]
