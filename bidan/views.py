@@ -10,8 +10,7 @@ import json
 import inflection
 import sys
 from datetime import datetime
-# from datetime import date, timedelta 
-import dateutil.relativedelta
+from datetime import date, timedelta 
 from .models import Response
 
 # set timeout
@@ -46,17 +45,17 @@ def get(request):
 	date = request.POST["date"]
 	if date == "" : 
 		# today = datetime.date.today()
-		# first = today.replace(day=1)
-		# lastMonth = first - datetime.timedelta(days=1)
-		# date = lastMonth.strftime("%d/%m/%Y")
-		now = datetime.datetime.now()
-		lastMonth = now + dateutil.relativedelta.relativedelta(months=-1)
+		today = date.today()
+		first = today.replace(day=1)
+		lastMonth = first - datetime.timedelta(days=1)
 		date = lastMonth.strftime("%d/%m/%Y")
+		# now = datetime.datetime.now()
+		# lastMonth = now + dateutil.relativedelta.relativedelta(months=-1)
 
 
 	timestamp = time.mktime(datetime.datetime.strptime(date, "%d/%m/%Y").timetuple())
 
-	return HttpResponse("{\"test\":"+lastMonth+" | "+timestamp+"}", content_type="application/json")
+	return HttpResponse("{\"test\":"+timestamp+"}", content_type="application/json")
 
 	# batchSize = "500"
 	batchSizeString = ""
