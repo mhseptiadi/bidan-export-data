@@ -149,7 +149,6 @@ def download_all(request, responses_id):
 		xlsfile.append(_object)
 		result_json = json.loads(_object.response_text)
 		for row in result_json:
-			row = eval(json.dumps(row))
 			if not row["instanceId"] in instanceIds:
 				instanceIds.append(row["instanceId"])
 			else:
@@ -169,11 +168,13 @@ def download_all(request, responses_id):
 			if row["formName"] == "open_census_edit":
 				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["id"]]]})
 			if row["formName"] == "follow_up" or row["formName"] == "child_health" or row["formName"] == "dietary_intake":
-				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"]]]})
-				jsonfield.append({'name' : "HH Member Name", 'value' : memberName[row["entityId"]]})
+				r_entityId  = row["entityId"]
+				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[r_entityId]]})
+				jsonfield.append({'name' : "HH Member Name", 'value' : memberName[r_entityId]})
 			if row["formName"] == "follow_up_edit" or row["formName"] == "child_health_edit" or row["formName"] == "dietary_intake_edit":
-                                jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"]]]})
-                                jsonfield.append({'name' : "HH Member Name", 'value' : memberName[row["entityId"]]})
+				r_entityId  = row["entityId"]
+				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[r_entityId]]})
+				jsonfield.append({'name' : "HH Member Name", 'value' : memberName[r_entityId]})
 
 
 			jsonfield.extend(jsondata["form"]["fields"])
@@ -200,7 +201,6 @@ def download(request, response_id):
 	jsonData = json.loads(xlsfile.response_text)
 
 	for row in jsonData:
-		row = eval(json.dumps(row))
 		if not row["instanceId"] in instanceIds:
 			instanceIds.append(row["instanceId"])
 		else:
@@ -221,17 +221,19 @@ def download(request, response_id):
 		if row["formName"] == "open_census_edit":
                         jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["id"]]]})
 		if row["formName"] == "follow_up" or row["formName"] == "child_health" or row["formName"] == "dietary_intake":
-			jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"]]]})
-			jsonfield.append({'name' : "HH Member Name", 'value' : memberName[row["entityId"]]})
+			r_entityId = row["entityId"]
+			jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[r_entityId]]})
+			jsonfield.append({'name' : "HH Member Name", 'value' : memberName[r_entityId]})
 		if row["formName"] == "follow_up_edit" or row["formName"] == "child_health_edit" or row["formName"] == "dietary_intake_edit":
-			if row["entityId"] in memberHHIds:
-                        	jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"]]]})
+			r_entityId = row["entityId"]
+			if r_entityId in memberHHIds:
+				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[r_entityId]]})
 			else:
-				jsonfield.append({'name' : "HH Head Name", 'value' : 'not found:'+row["entityId"]})
-			if row["entityId"] in memberName:
-                        	jsonfield.append({'name' : "HH Member Name", 'value' : memberName[row["entityId"]]})
+				jsonfield.append({'name' : "HH Head Name", 'value' : 'not found:'+r_entityId})
+			if r_entityId in memberName:
+				jsonfield.append({'name' : "HH Member Name", 'value' : memberName[r_entityId]})
 			else:
-				jsonfield.append({'name' : "HH Member Name", 'value' : 'not found:'+row["entityId"]})
+				jsonfield.append({'name' : "HH Member Name", 'value' : 'not found:'+r_entityId})
 
 		jsonfield.extend(jsondata["form"]["fields"])
 		jsonfield.append({'name' : "clientVersionSubmissionDate", 'value' : datetime.fromtimestamp(int(row["clientVersion"])/1000.0).strftime('%Y-%m-%d %H:%M:%S')})
