@@ -42,20 +42,20 @@ def index(request):
 def get(request):
 	username = request.POST["username"]
 	batchSize = request.POST["batch_size"]
-	date = request.POST["date"]
-	if date == "" : 
+	dateAfter = request.POST["dateAfter"]
+	if dateAfter == "" : 
 		# today = datetime.date.today()
 		today = date.today()
 		first = today.replace(day=1)
 		lastMonth = first - datetime.timedelta(days=1)
-		date = lastMonth.strftime("%d/%m/%Y")
+		dateAfter = lastMonth.strftime("%d/%m/%Y")
 		# now = datetime.datetime.now()
 		# lastMonth = now + dateutil.relativedelta.relativedelta(months=-1)
 
 
-	timestamp = time.mktime(datetime.datetime.strptime(date, "%d/%m/%Y").timetuple())
+	timestamp = time.mktime(datetime.datetime.strptime(dateAfter, "%d/%m/%Y").timetuple())
 
-	return HttpResponse("{\"test\":"+timestamp+"}", content_type="application/json")
+	return HttpResponse("{\"test\":"+dateAfter+" | "+timestamp+"}", content_type="application/json")
 
 	# batchSize = "500"
 	batchSizeString = ""
