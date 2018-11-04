@@ -149,37 +149,36 @@ def download_all(request, responses_id):
 		xlsfile.append(_object)
 		result_json = json.loads(_object.response_text)
 		for row in result_json:
-			if not row["instanceId"] in instanceIds:
-				instanceIds.append(row["instanceId"])
+			if not row["instanceId"].encode("ascii","replace") in instanceIds:
+				instanceIds.append(row["instanceId"].encode("ascii","replace"))
 			else:
 				continue
-			if not row["formName"] in formNames:
-				formNames[row["formName"]] = []
-			jsondata = (json.loads(row["formInstance"]))
+			if not row["formName"].encode("ascii","replace") in formNames:
+				formNames[row["formName"].encode("ascii","replace")] = []
+			jsondata = (json.loads(row["formInstance"].encode("ascii","replace")))
 			jsonfield = []
-			jsonfield.append({'name' : "User ID", 'value' : row["anmId"]})
+			jsonfield.append({'name' : "User ID", 'value' : row["anmId"].encode("ascii","replace")})
 
-			if row["formName"] == "HHRegistration":
-				hhHeads[row["entityId"]] = jsondata["form"]["mapOfFieldsByName"]["name_household_head"]
-			if row["formName"] == "open_census":
+			if row["formName"].encode("ascii","replace") == "HHRegistration":
+				hhHeads[row["entityId"].encode("ascii","replace")] = jsondata["form"]["mapOfFieldsByName"]["name_household_head"]
+			if row["formName"].encode("ascii","replace") == "open_census":
 				memberName[jsondata["form"]["mapOfFieldsByName"]["memberId"]] = jsondata["form"]["mapOfFieldsByName"]["Name_family_member"]
 				memberHHIds[jsondata["form"]["mapOfFieldsByName"]["memberId"]] = jsondata["form"]["mapOfFieldsByName"]["id"]
 				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["memberId"]]]})
-			if row["formName"] == "open_census_edit":
+			if row["formName"].encode("ascii","replace") == "open_census_edit":
 				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["id"]]]})
-			if row["formName"] == "follow_up" or row["formName"] == "child_health" or row["formName"] == "dietary_intake":
-				# jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"]]]})
-				jsonfield.append({'name' : "HH Head Name", 'value' : json.dumps(jsonData)})
-				jsonfield.append({'name' : "HH Member Name", 'value' : memberName[row["entityId"]]})
-			if row["formName"] == "follow_up_edit" or row["formName"] == "child_health_edit" or row["formName"] == "dietary_intake_edit":
-                                jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"]]]})
-                                jsonfield.append({'name' : "HH Member Name", 'value' : memberName[row["entityId"]]})
+			if row["formName"].encode("ascii","replace") == "follow_up" or row["formName"].encode("ascii","replace") == "child_health" or row["formName"].encode("ascii","replace") == "dietary_intake":
+				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"].encode("ascii","replace")]]})
+				jsonfield.append({'name' : "HH Member Name", 'value' : memberName[row["entityId"].encode("ascii","replace")]})
+			if row["formName"].encode("ascii","replace") == "follow_up_edit" or row["formName"].encode("ascii","replace") == "child_health_edit" or row["formName"].encode("ascii","replace") == "dietary_intake_edit":
+                                jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"].encode("ascii","replace")]]})
+                                jsonfield.append({'name' : "HH Member Name", 'value' : memberName[row["entityId"].encode("ascii","replace")]})
 
 
 			jsonfield.extend(jsondata["form"]["fields"])
-			jsonfield.append({'name' : "clientVersionSubmissionDate", 'value' : datetime.fromtimestamp(int(row["clientVersion"])/1000.0).strftime('%Y-%m-%d %H:%M:%S')})
-			jsonfield.append({'name' : "serverVersionSubmissionDate", 'value' : datetime.fromtimestamp(int(row["serverVersion"])/1000.0).strftime('%Y-%m-%d %H:%M:%S')})
-			formNames[row["formName"]].append(jsonfield)
+			jsonfield.append({'name' : "clientVersionSubmissionDate", 'value' : datetime.fromtimestamp(int(row["clientVersion"].encode("ascii","replace"))/1000.0).strftime('%Y-%m-%d %H:%M:%S')})
+			jsonfield.append({'name' : "serverVersionSubmissionDate", 'value' : datetime.fromtimestamp(int(row["serverVersion"].encode("ascii","replace"))/1000.0).strftime('%Y-%m-%d %H:%M:%S')})
+			formNames[row["formName"].encode("ascii","replace")].append(jsonfield)
 
 	xlsname = ""
 	for xls in xlsfile :
@@ -200,42 +199,42 @@ def download(request, response_id):
 	jsonData = json.loads(xlsfile.response_text)
 
 	for row in jsonData:
-		if not row["instanceId"] in instanceIds:
-			instanceIds.append(row["instanceId"])
+		if not row["instanceId"].encode("ascii","replace") in instanceIds:
+			instanceIds.append(row["instanceId"].encode("ascii","replace"))
 		else:
 			continue
-		if not row["formName"] in formNames:
-			formNames[row["formName"]] = []
+		if not row["formName"].encode("ascii","replace") in formNames:
+			formNames[row["formName"].encode("ascii","replace")] = []
 
-		jsondata = (json.loads(row["formInstance"]))
+		jsondata = (json.loads(row["formInstance"].encode("ascii","replace")))
 		jsonfield = []
-		jsonfield.append({'name' : "User ID", 'value' : row["anmId"]})
+		jsonfield.append({'name' : "User ID", 'value' : row["anmId"].encode("ascii","replace")})
 
-		if row["formName"] == "HHRegistration":
-			hhHeads[row["entityId"]] = jsondata["form"]["mapOfFieldsByName"]["name_household_head"]
-		if row["formName"] == "open_census":
+		if row["formName"].encode("ascii","replace") == "HHRegistration":
+			hhHeads[row["entityId"].encode("ascii","replace")] = jsondata["form"]["mapOfFieldsByName"]["name_household_head"]
+		if row["formName"].encode("ascii","replace") == "open_census":
 			memberName[jsondata["form"]["mapOfFieldsByName"]["memberId"]] = jsondata["form"]["mapOfFieldsByName"]["Name_family_member"]
 			memberHHIds[jsondata["form"]["mapOfFieldsByName"]["memberId"]] = jsondata["form"]["mapOfFieldsByName"]["id"]
 			jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["memberId"]]]})
-		if row["formName"] == "open_census_edit":
+		if row["formName"].encode("ascii","replace") == "open_census_edit":
                         jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["id"]]]})
-		if row["formName"] == "follow_up" or row["formName"] == "child_health" or row["formName"] == "dietary_intake":
-			jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"]]]})
-			jsonfield.append({'name' : "HH Member Name", 'value' : memberName[row["entityId"]]})
-		if row["formName"] == "follow_up_edit" or row["formName"] == "child_health_edit" or row["formName"] == "dietary_intake_edit":
-			if row["entityId"] in memberHHIds:
-                        	jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"]]]})
+		if row["formName"].encode("ascii","replace") == "follow_up" or row["formName"].encode("ascii","replace") == "child_health" or row["formName"].encode("ascii","replace") == "dietary_intake":
+			jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"].encode("ascii","replace")]]})
+			jsonfield.append({'name' : "HH Member Name", 'value' : memberName[row["entityId"].encode("ascii","replace")]})
+		if row["formName"].encode("ascii","replace") == "follow_up_edit" or row["formName"].encode("ascii","replace") == "child_health_edit" or row["formName"].encode("ascii","replace") == "dietary_intake_edit":
+			if row["entityId"].encode("ascii","replace") in memberHHIds:
+                        	jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[row["entityId"].encode("ascii","replace")]]})
 			else:
-				jsonfield.append({'name' : "HH Head Name", 'value' : 'not found:'+row["entityId"]})
-			if row["entityId"] in memberName:
-                        	jsonfield.append({'name' : "HH Member Name", 'value' : memberName[row["entityId"]]})
+				jsonfield.append({'name' : "HH Head Name", 'value' : 'not found:'+row["entityId"].encode("ascii","replace")})
+			if row["entityId"].encode("ascii","replace") in memberName:
+                        	jsonfield.append({'name' : "HH Member Name", 'value' : memberName[row["entityId"].encode("ascii","replace")]})
 			else:
-				jsonfield.append({'name' : "HH Member Name", 'value' : 'not found:'+row["entityId"]})
+				jsonfield.append({'name' : "HH Member Name", 'value' : 'not found:'+row["entityId"].encode("ascii","replace")})
 
 		jsonfield.extend(jsondata["form"]["fields"])
-		jsonfield.append({'name' : "clientVersionSubmissionDate", 'value' : datetime.fromtimestamp(int(row["clientVersion"])/1000.0).strftime('%Y-%m-%d %H:%M:%S')})
-		jsonfield.append({'name' : "serverVersionSubmissionDate", 'value' : datetime.fromtimestamp(int(row["serverVersion"])/1000.0).strftime('%Y-%m-%d %H:%M:%S')})
-		formNames[row["formName"]].append(jsonfield)
+		jsonfield.append({'name' : "clientVersionSubmissionDate", 'value' : datetime.fromtimestamp(int(row["clientVersion"].encode("ascii","replace"))/1000.0).strftime('%Y-%m-%d %H:%M:%S')})
+		jsonfield.append({'name' : "serverVersionSubmissionDate", 'value' : datetime.fromtimestamp(int(row["serverVersion"].encode("ascii","replace"))/1000.0).strftime('%Y-%m-%d %H:%M:%S')})
+		formNames[row["formName"].encode("ascii","replace")].append(jsonfield)
 
 	return xls_to_response(make_xls(formNames), xlsfile.response_username+'.xls')	
 
