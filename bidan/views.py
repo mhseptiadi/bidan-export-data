@@ -186,7 +186,7 @@ def download_all(request, responses_id):
 				if itHas(memberHHIds,itHas(jsondata,"form-mapOfFieldsByName-id")) is not None:
 					jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["id"]]]})
 				else:
-					jsonfield.append({'name' : "HH Head Name", 'value' : ""})
+					jsonfield.append({'name' : "HH Head Name", 'value' : 'not found'})
 			if row["formName"] == "follow_up" or row["formName"] == "child_health" or row["formName"] == "dietary_intake":
 				r_entityId = row["entityId"]
 				if itHas(memberHHIds,r_entityId) is not None:
@@ -254,7 +254,7 @@ def download(request, response_id):
 			if itHas(memberHHIds,itHas(jsondata,"form-mapOfFieldsByName-id")) is not None:
 				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[jsondata["form"]["mapOfFieldsByName"]["id"]]]})
 			else:
-				jsonfield.append({'name' : "HH Head Name", 'value' : ""})
+				jsonfield.append({'name' : "HH Head Name", 'value' : 'not found'})
 		if row["formName"] == "follow_up" or row["formName"] == "child_health" or row["formName"] == "dietary_intake":
 			r_entityId = row["entityId"]
 			if itHas(memberHHIds,r_entityId) is not None:
