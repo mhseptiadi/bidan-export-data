@@ -51,9 +51,9 @@ def get(request):
 		dateAfter = "01/"+lastMonth.strftime("%m/%Y")
 
 
-	timestamp = time.mktime(datetime.strptime(dateAfter, "%d/%m/%Y").timetuple())
+	timestamp = str(int(time.mktime(datetime.strptime(dateAfter, "%d/%m/%Y").timetuple())))+"000"
 
-	return HttpResponse("{\"test\":"+dateAfter+" | "+str(int(timestamp))+"000}", content_type="application/json")
+	# return HttpResponse("{\"test\":"+dateAfter+" | "+timestamp, content_type="application/json")
 
 	# batchSize = "500"
 	batchSizeString = ""
@@ -72,7 +72,7 @@ def get(request):
 		return render(request, 'bidan/index.html', {'error_message' : "No location selected", 'users1' : USERGROUP1, 'users2' : USERGROUP2 })
 
 	for user in listUser:
-		apiUrl = URL + "/form-submissions-by-loc?locationId="+user+"&timestamp=0"+batchSizeString
+		apiUrl = URL + "/form-submissions-by-loc?locationId="+user+"&timestamp="+timestamp+batchSizeString
 		result = fetch(request,USERLOGIN, PASSWORDLOGIN, apiUrl, user)
 		if result["responses"] is not None :
 			listResponse.append(result["responses"])
