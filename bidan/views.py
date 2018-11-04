@@ -9,7 +9,8 @@ import xlwt
 import json
 import inflection
 import sys
-from datetime import datetime,date,timedelta 
+from datetime import datetime
+from datetime import date, timedelta 
 from .models import Response
 
 # set timeout
