@@ -313,6 +313,8 @@ def make_xls(formNames):
 					if idx1 == 0:
 						it = inflection.titleize(data2)
 						print(it)
+						print(idx2)
+						print(style0)
 						wa.write(0, idx2, it, style0)
 					if data2 in data1:
 						value = data1[data2]
