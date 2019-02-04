@@ -194,21 +194,29 @@ def download_all(request, responses_id):
 					jsonfield.append({'name' : "HH Head Name", 'value' : 'not found'})
 			if row["formName"] == "follow_up" or row["formName"] == "child_health" or row["formName"] == "dietary_intake":
 				r_entityId = row["entityId"]
-				if itHas(memberHHIds,r_entityId) is not None:
-					jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[r_entityId]]})
+				if r_entityId in memberHHIds:
+					if memberHHIds[r_entityId] in hhHeads:
+						jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[r_entityId]]})
+					else:
+						jsonfield.append({'name' : "HH Head Name", 'value' : 'not found:'+r_entityId})	
 				else:
 					jsonfield.append({'name' : "HH Head Name", 'value' : 'not found:'+r_entityId})
-				if itHas(memberName,r_entityId) is not None:
+					
+				if r_entityId in memberName:
 					jsonfield.append({'name' : "HH Member Name", 'value' : memberName[r_entityId]})
 				else:
 					jsonfield.append({'name' : "HH Member Name", 'value' : 'not found:'+r_entityId})
 			if row["formName"] == "follow_up_edit" or row["formName"] == "child_health_edit" or row["formName"] == "dietary_intake_edit":
 				r_entityId = row["entityId"]
-				if itHas(memberHHIds,r_entityId) is not None:
-					jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[r_entityId]]})
+				if r_entityId in memberHHIds:
+					if memberHHIds[r_entityId] in hhHeads:
+						jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[r_entityId]]})
+					else:
+						jsonfield.append({'name' : "HH Head Name", 'value' : 'not found:'+r_entityId})
 				else:
 					jsonfield.append({'name' : "HH Head Name", 'value' : 'not found:'+r_entityId})
-				if itHas(memberName,r_entityId) is not None:
+
+				if r_entityId in memberName:
 					jsonfield.append({'name' : "HH Member Name", 'value' : memberName[r_entityId]})
 				else:
 					jsonfield.append({'name' : "HH Member Name", 'value' : 'not found:'+r_entityId})
@@ -267,11 +275,15 @@ def download(request, response_id):
 				jsonfield.append({'name' : "HH Head Name", 'value' : 'not found'})
 		if row["formName"] == "follow_up" or row["formName"] == "child_health" or row["formName"] == "dietary_intake":
 			r_entityId = row["entityId"]
-			if itHas(memberHHIds,r_entityId) is not None:
-				jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[r_entityId]]})
+			if r_entityId in memberHHIds:
+				if memberHHIds[r_entityId] in hhHeads:
+					jsonfield.append({'name' : "HH Head Name", 'value' : hhHeads[memberHHIds[r_entityId]]})
+				else:
+					jsonfield.append({'name' : "HH Head Name", 'value' : 'not found:'+r_entityId})
 			else:
 				jsonfield.append({'name' : "HH Head Name", 'value' : 'not found:'+r_entityId})
-			if itHas(memberName,r_entityId) is not None:
+
+			if r_entityId in memberName:
 				jsonfield.append({'name' : "HH Member Name", 'value' : memberName[r_entityId]})
 			else:
 				jsonfield.append({'name' : "HH Member Name", 'value' : 'not found:'+r_entityId})
